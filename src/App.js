@@ -58,20 +58,39 @@ function Main({children}){
       </main>
 }
 
-function ListBox({children}){
-   const [isOpen1, setIsOpen1] = useState(true);
+function Box({children}){
+   const [isOpen, setIsOpen] = useState(true);
+
+
    return <div className="box">
           <button
             className="btn-toggle"
-            onClick={() => setIsOpen1((open) => !open)}
+            onClick={() => setIsOpen((open) => !open)}
           >
-            {isOpen1 ? "–" : "+"}
+            {isOpen ? "–" : "+"}
           </button>
-          {isOpen1 && 
+          {isOpen && 
            children
           }
         </div>
 }
+
+// function WatchedBox({children}){
+//   const [isOpen2, setIsOpen2] = useState(true);
+
+
+//    return <div className="box">
+//           <button
+//             className="btn-toggle"
+//             onClick={() => setIsOpen2((open) => !open)}
+//           >
+//             {isOpen2 ? "–" : "+"}
+//           </button>
+//           {isOpen2 && (
+//             children
+//           )}
+//       </div>
+// }
 
 function MoviesList({movies}){
   return  <ul className="list">
@@ -93,26 +112,6 @@ function Movie({movie}){
                     </p>
                   </div>
                 </li>
-}
-
-function WatchedBox(){
-  const [watched, setWatched] = useState(tempWatchedData);
-  const [isOpen2, setIsOpen2] = useState(true);
-   return <div className="box">
-          <button
-            className="btn-toggle"
-            onClick={() => setIsOpen2((open) => !open)}
-          >
-            {isOpen2 ? "–" : "+"}
-          </button>
-          {isOpen2 && (
-            <>
-              <Summary watched={watched}/>
-
-             <WatchedMoviesList watched={watched}/>
-            </>
-          )}
-      </div>
 }
 
 function WatchedMoviesList({watched}){
@@ -174,6 +173,7 @@ function Summary({watched}){
 
 export default function App() {
    const [movies, setMovies] = useState(tempMovieData);
+   const [watched, setWatched] = useState(tempWatchedData);
   return (
     <>
       <Navbar>
@@ -181,10 +181,15 @@ export default function App() {
         <ResultsCount movies={movies}/>
       </Navbar>
       <Main > 
-        <ListBox>
+        <Box>
           <MoviesList  movies={movies}/>
-        </ListBox>
-       <WatchedBox /> </Main>
+        </Box>
+       <Box>
+            <Summary watched={watched}/>
+             <WatchedMoviesList watched={watched}/>
+       </Box>
+       
+        </Main>
     </>
   );
 }
