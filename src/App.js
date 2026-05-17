@@ -58,7 +58,7 @@ function Main({children}){
       </main>
 }
 
-function Box({element}){
+function Box({children}){
    const [isOpen, setIsOpen] = useState(true);
 
 
@@ -70,7 +70,7 @@ function Box({element}){
             {isOpen ? "–" : "+"}
           </button>
           {isOpen && 
-           element
+           children
           }
         </div>
 }
@@ -182,20 +182,23 @@ export default function App() {
       </Navbar>
       <Main > 
 
-        <Box element={<MoviesList  movies={movies}/>}/>
+        {/* passing elements as props */}
+        {/* <Box element={<MoviesList  movies={movies}/>}/>
         <Box element={
           <>
             <Summary watched={watched}/>
             <WatchedMoviesList watched={watched}/>
           </>
-        }/>
-        {/* <Box>
+        }/> */}
+
+        {/* children prop */}
+        <Box>
           <MoviesList  movies={movies}/>
         </Box>
        <Box>
             <Summary watched={watched}/>
              <WatchedMoviesList watched={watched}/>
-       </Box> */}
+       </Box>
        
         </Main>
     </>
