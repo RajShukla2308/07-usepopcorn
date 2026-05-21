@@ -183,18 +183,20 @@ function Error({message}){
 }
 
 export default function App() {
+  const [query, setQuery] = useState("");
    const [movies, setMovies] = useState([]);
    const [watched, setWatched] = useState([]);
    const [isMoviesLoading, setIsMoviesLoading] = useState(false);
-   const [error,setError] = useState('')
+   const [error,setError] = useState('');
+   const tempQuery = 'interstellar';
 
   useEffect(()=>{
     async function fetchMovies(){
       try{
 
         setIsMoviesLoading(true);
-
-        const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=dgsdg`);
+        setError("")
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
         if(!res.ok)
            throw new Error('something went wrong while fetching movies')
 
@@ -213,14 +215,20 @@ export default function App() {
       }
      
     } 
+
+    if(query.length < 3){
+      setMovies([]);
+      setError("");
+      return;
+    }
     fetchMovies();
 
-  },[])
+  },[query])
 
   return (
     <>
       <Navbar>
-        <Search />
+        <Search query={query} setQuery={setQuery}/>
         <ResultsCount movies={movies}/>
       </Navbar>
       <Main > 
@@ -275,8 +283,8 @@ function ResultsCount ({movies}){
 }
 
 
-function Search() {
-    const [query, setQuery] = useState("");
+function Search({query,setQuery}) {
+  
     return <input
           className="search"
           type="text"
