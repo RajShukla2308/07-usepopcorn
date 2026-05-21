@@ -173,17 +173,48 @@ function Summary({watched}){
 
 const KEY = '872c45a8'
 
+
+function Loader(){
+  return <p className="loader">Loading...</p>
+}
+
+function Error({message}){
+  return <p className="error">{message}</p>
+}
+
 export default function App() {
    const [movies, setMovies] = useState([]);
    const [watched, setWatched] = useState([]);
+   const [isMoviesLoading, setIsMoviesLoading] = useState(false);
+   const [error,setError] = useState('')
 
   useEffect(()=>{
     async function fetchMovies(){
-      const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=interstellar`);
-      const data = await res.json();
-      setMovies(data.Search);
+      try{
+
+        setIsMoviesLoading(true);
+
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=dgsdg`);
+        if(!res.ok)
+           throw new Error('something went wrong while fetching movies')
+
+
+        const data = await res.json();
+        if(data.Response === 'False') {
+          throw new Error('Movie not found')
+        }
+
+        setMovies(data.Search);
+      }catch(err){
+        console.log(err.message);
+        setError(err.message); 
+      }finally{
+        setIsMoviesLoading(false);
+      }
+     
     } 
-    fetchMovies()
+    fetchMovies();
+
   },[])
 
   return (
@@ -205,7 +236,11 @@ export default function App() {
 
         {/* children prop */}
         <Box>
-          <MoviesList  movies={movies}/>
+          {/* {isMoviesLoading ? <Loader /> : <MoviesList  movies={movies}/>} */}
+
+          {isMoviesLoading && <Loader />}
+          {!isMoviesLoading && !error && <MoviesList  movies={movies}/>}
+          {error && <Error message={error} /> }
         </Box>
        <Box>
             <Summary watched={watched}/>
@@ -235,7 +270,7 @@ function Logo(){
 
 function ResultsCount ({movies}){
      return <p className="num-results">
-          Found <strong>{movies.length}</strong> results
+          Found <strong>{movies?.length}</strong> results
         </p>
 }
 
