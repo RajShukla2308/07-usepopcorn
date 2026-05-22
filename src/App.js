@@ -150,6 +150,7 @@ function MovieDetails({selectedId,onCloseMovie,onAddWatched, watched}){
 
         const data = await res.json();
         setMovie(data);
+        // document.title = `Movie | ${title}`
         setIsLoading(false);
 
       } catch(err){
@@ -158,6 +159,11 @@ function MovieDetails({selectedId,onCloseMovie,onAddWatched, watched}){
     }
     fetchMovieDetails()
   },[selectedId])
+
+  useEffect(()=>{
+    if(!title) return;
+    document.title = `Movie | ${title}`
+  },[title])
 
 
   function handleAdd(){
