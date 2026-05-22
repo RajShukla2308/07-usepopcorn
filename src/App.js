@@ -140,6 +140,19 @@ function MovieDetails({selectedId,onCloseMovie,onAddWatched, watched}){
     Genre: genre
   } = movie
 
+
+   useEffect(function (){
+    function callback(e){
+      if(e.code === 'Escape')onCloseMovie();
+    }
+    document.addEventListener('keydown',callback)
+
+
+    return function(){
+      document.removeEventListener('keydown',callback)
+    }
+   },[onCloseMovie])
+
   useEffect(()=>{
     async function fetchMovieDetails(){
        try{
@@ -351,6 +364,7 @@ export default function App() {
       setError("");
       return;
     }
+    handleCloseMovie()
     fetchMovies();
 
     // commenting as it is not working
