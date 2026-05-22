@@ -290,7 +290,7 @@ function Error({message}){
 }
 
 export default function App() {
-   const [query, setQuery] = useState("interstellar");
+   const [query, setQuery] = useState("");
    const [movies, setMovies] = useState([]);
    const [watched, setWatched] = useState([]);
    const [isMoviesLoading, setIsMoviesLoading] = useState(false);
@@ -316,12 +316,14 @@ export default function App() {
    }
 
   useEffect(()=>{
+     const controller = new AbortController();
     async function fetchMovies(){
       try{
-
         setIsMoviesLoading(true);
         setError("")
-        const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+          {signal: controller.signal}
+        );
         if(!res.ok)
            throw new Error('something went wrong while fetching movies')
 
@@ -333,10 +335,13 @@ export default function App() {
 
         setMovies(data.Search);
       }catch(err){
-        console.log(err.message);
-        setError(err.message); 
+        if(err.name == 'AbortError') return
+          console.log(err.message);
+          setError(err.message); 
       }finally{
+       if (!controller.signal.aborted) {
         setIsMoviesLoading(false);
+      }
       }
      
     } 
@@ -347,6 +352,11 @@ export default function App() {
       return;
     }
     fetchMovies();
+
+    // commenting as it is not working
+    // return function (){
+    //   controller.abort();
+    // }
 
   },[query])
 
