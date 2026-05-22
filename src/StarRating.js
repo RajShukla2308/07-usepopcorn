@@ -20,7 +20,7 @@ const textStyle={
 
 export default function StarRating({maxRating = 5,
     color= '#fcc419',
-     size='48px', 
+     size='24px', 
      message=[],
     defaultRating = 0,
     onSetRating
