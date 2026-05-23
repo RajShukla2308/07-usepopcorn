@@ -1,6 +1,7 @@
 import { useEffect, useState , useRef} from "react";
 import StarRating from './StarRating'
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 // const tempMovieData = [
 //   {
@@ -316,8 +317,11 @@ export default function App() {
    const [selectedId, setSelectedId] = useState(null);
   //  const tempQuery = 'interstellar';
 
-  // just like a state
+  // just like a state - useMovies state
   const {movies, isMoviesLoading,error} = useMovies(query)
+
+  //useLocalStorageState
+  const [watched,setWatched] = useLocalStorageState([],"watched");
 
 
    function handleSelectMovie(movieId){
@@ -328,7 +332,7 @@ export default function App() {
     setSelectedId(null);
    }
 
-   const [watched, setWatched] = useState(()=>JSON.parse(localStorage.getItem('watched')));
+   // const [watched, setWatched] = useState(()=>JSON.parse(localStorage.getItem('watched')));
 
    function handleWatched(movie){
     setWatched(watched=>[...watched,movie]);
@@ -340,9 +344,9 @@ export default function App() {
    }
 
   
-   useEffect(function(){
-    localStorage.setItem('watched',JSON.stringify([...watched]))
-   },[watched])
+  //  useEffect(function(){
+  //   localStorage.setItem('watched',JSON.stringify([...watched]))
+  //  },[watched])
 
 
   
